@@ -28,12 +28,7 @@ router.put("/cars/:id", (req, res) => {
   const carId = parseInt(req.params.id);
   const updatedCar = req.body;
 
-  console.log("Requisição PUT recebida para:", `/cars/${carId}`);
-  console.log("Dados Atualizados:", updatedCar);
-
   const carIndex = cars.findIndex((car) => car.id === carId);
-
-  console.log("Índice do Carro:", carIndex);
 
   if (carIndex !== -1) {
     cars[carIndex] = { ...cars[carIndex], ...updatedCar };
@@ -41,6 +36,25 @@ router.put("/cars/:id", (req, res) => {
       success: true,
       message: "Carro atualizado com sucesso",
       data: cars[carIndex],
+    });
+  } else {
+    res.status(404).json({ success: false, message: "Carro não encontrado" });
+  }
+});
+
+router.delete("/cars/:id", (req, res) => {
+  const carId = parseInt(req.params.id);
+
+  console.log("Requisição DELETE recebida para:", `/cars/${carId}`);
+
+  const carIndex = cars.findIndex((car) => car.id === carId);
+
+  if (carIndex !== -1) {
+    const deletedCar = cars.splice(carIndex, 1)[0];
+    res.json({
+      success: true,
+      message: "Carro excluído com sucesso",
+      data: deletedCar,
     });
   } else {
     res.status(404).json({ success: false, message: "Carro não encontrado" });
